@@ -13,7 +13,6 @@ class HandanSpider(scrapy.Spider):
 
     def start_requests(self):
         url = "https://www.hdmuseum.org/Product/Query"
-        requests=[]
         #三页，懒得去获取页数了。。。
         for i in range(1, 4):
             data = {
@@ -23,22 +22,12 @@ class HandanSpider(scrapy.Spider):
             }
             #请求
             request = scrapy.FormRequest(url, formdata=data, callback=self.parse_page)
-            requests.append(request)
             yield request
-        #return requests
-        # data = {
-        #         "queryData.classId": "16",
-        #         "queryData.pageIndex": "1",
-        #         "queryData.pageSize": "9"
-        #     }
-        # request = scrapy.FormRequest(url, formdata=data, callback=self.parse_page)
-        # yield request
     def parse_page(self,response):
         #得到响应的json
         jsonBody =response.json()
         # jsonBody=json.loads(response.body.decode('gbk').encode('utf-8'))
         models=jsonBody['list']
-        #print(models)
         #对json里的逐个返回item
         for dict in models:
             id=dict['id']
